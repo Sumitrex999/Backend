@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from "morgan"
+import authRouter from "../routes/auth.routes.js"
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.get("/api/v1/health",(req,res)=>{
         message:"Still working on the backend buddy? So, Proud of myself"
     })
 })
+
+// Write User registeration API
+app.use("/api/v1", authRouter);
 
 
 

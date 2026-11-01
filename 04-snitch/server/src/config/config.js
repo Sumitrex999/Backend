@@ -13,7 +13,8 @@ function requireVariable(name){
 // Write an object to store the env variables
 const config = {
     PORT:requireVariable("PORT"),
-    MONGO_URI:requireVariable("MONGO_URI")
+    MONGO_URI:requireVariable("MONGO_URI"),
+    JWT_SECRET:requireVariable("JWT_SECRET")
 }
 
 export default config;

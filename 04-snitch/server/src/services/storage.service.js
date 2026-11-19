@@ -16,6 +16,8 @@ export async function uploadFile(file, fileName){
         folder:"/snitch"
     });
 
-    console.log(response);
-    return response.url
+    return {
+        fileId: response.fileId,
+        url: response.url
+    }
 }

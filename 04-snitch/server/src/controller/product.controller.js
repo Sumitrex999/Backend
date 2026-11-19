@@ -137,13 +137,17 @@ export async function createProduct(req,res){
     }
 
     const urls = await Promise.all(
-        req.files.map(async (file)=>{
+        req.files.map(async (file, index)=>{
             const fileName = `${Date.now()}-${file.originalname}`
-            const url = await uploadFile(
+            const respose = await uploadFile(
                 file.buffer.toString("base64"),
                 fileName
             )
-            return url
+            return {
+                url:respose.url,
+                imagekitId:respose.fileId,
+                order:index+1
+            }
         })
     )
 

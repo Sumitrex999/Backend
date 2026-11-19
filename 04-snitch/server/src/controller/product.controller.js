@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js"
+import {uploadFile} from "../services/storage.service.js"
 
 export async function createProduct(req,res){
 
@@ -12,10 +13,11 @@ export async function createProduct(req,res){
     const {
         title,
         description,
-        price:{amount,currency},
-        categories,
-        sizes,
     } = req.body
+
+    const { amount, currency } = JSON.parse(req.body.price);
+    const sizes = JSON.parse(req.body.sizes);
+    const categories = JSON.parse(req.body.categories);
 
     const errors = [];
 
@@ -82,7 +84,7 @@ export async function createProduct(req,res){
         })
     } else{
         categories.forEach((category, index)=>{
-            if(typeof category !== "String" || !category.trim() ){
+            if(typeof category !== "string" || !category.trim() ){
                 errors.push({
                     field:`categories[${index}]`,
                     message: "Category must be a non-empty string"
@@ -118,6 +120,15 @@ export async function createProduct(req,res){
         })
     }
 
+    const files = req.files
+
+    if(!files || files.length === 0){
+        errors.push({
+            field: "images",
+            message: "At least one image is required"
+        })
+    }
+
     if(errors.length > 0){
         res.status(400).json({
             message:"Validation errors",
@@ -125,17 +136,29 @@ export async function createProduct(req,res){
         })
     }
 
-    const Product = await Product.create({
+    const urls = await Promise.all(
+        req.files.map(async (file)=>{
+            const fileName = `${Date.now()}-${file.originalname}`
+            const url = await uploadFile(
+                file.buffer.toString("base64"),
+                fileName
+            )
+            return url
+        })
+    )
+
+    const product = await Product.create({
         title,
         description,
-        price:{amount, currency},
+        price: { amount, currency },
         categories,
+        images: urls,
         sizes,
-        seller:user.id
-    })
+        seller: user.id
+    });
 
     return res.status(201).json({
         message:"Product created successfully",
-        Product
+        product
     });
 }

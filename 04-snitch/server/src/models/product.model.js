@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema({
             size:{
                 type:String,
                 required:true,
-                enum:[XS, S, M, L, XL, XXL]
+                enum:["XS", "S", "M", "L", "XL", "XXL"]
             },
             stock:{
                 type:Number,
@@ -63,7 +63,7 @@ const productSchema = new mongoose.Schema({
         default:false
     }
     
-},{timestamps})
+},{timestamps:true})
 
 const Product = mongoose.model("Product", productSchema);
 

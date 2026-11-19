@@ -1,6 +1,7 @@
 import express from "express"
 import morgan from "morgan"
-import authRouter from "../routes/auth.routes.js"
+import authRoutes from "../routes/auth.routes.js"
+import productRoutes from "../routes/product.routes.js"
 
 const app = express();
 
@@ -15,8 +16,11 @@ app.get("/api/v1/health",(req,res)=>{
     })
 })
 
-// Write User registeration API
-app.use("/api/v1", authRouter);
+// Write User API
+app.use("/api/v1", authRoutes);
+
+// Write Products API
+app.use("/api/v1", productRoutes);
 
 
 
